@@ -1,1 +1,2 @@
-Hello I'm Mario.
+# mario
+A game of Mario using JavaScript and Kaboom.js
