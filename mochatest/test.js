@@ -1,58 +1,84 @@
 const { expect } = require('chai');
-const {
-  displayPlayerScore,
-  setPlayerScore,
-  updateHighScore
-} = require('./your-game-functions'); // แทนที่ด้วยชื่อฟังก์ชันจริง
+const kaboom = require('kaboom');
 
-describe('Player Scores', () => {
-  let playerScore = 0;
-  let highScore = 0;
+const fs = require('fs');
+const path = require('path');
+const gameCode = fs.readFileSync(path.resolve(__dirname, '../main.js'), 'utf8');
 
-  beforeEach(() => {
-    // กำหนดค่าเริ่มต้นของคะแนนที่ผู้เล่นมี
-    playerScore = 0;
-    highScore = 0;
+describe('Game Tests', function () {
+  let context;
+
+  beforeEach(function () {
+    context = kaboom({
+      global: true,
+      fullscreen: false,
+      scale: 1,
+      debug: false,
+      clearColor: [0, 0, 0, 1],
+    });
+    eval(gameCode); // โหลดโค้ดของเกม
   });
 
-  it('TC1: Should display "No score available" when player has no score', () => {
-    const result = displayPlayerScore(); // แทนที่ด้วยฟังก์ชันที่แสดงคะแนนของผู้เล่น
-
-    expect(result).to.equal('No score available');
+  afterEach(function () {
+    context.destroy();
   });
 
-  it('TC2: Should display the highest score when player has a score', () => {
-    playerScore = 100; // แทนที่ด้วยคะแนนที่ต้องการทดสอบ
-    const result = displayPlayerScore(); // แทนที่ด้วยฟังก์ชันที่แสดงคะแนนของผู้เล่น
+  it('TC1: Should display no score when player has no previous score', function () {
+    const scoreLabel = context.world.get('scoreLabel')[0];
 
-    expect(result).to.equal(`High Score: ${playerScore}`);
+    expect(scoreLabel.text).to.equal('0');
   });
 
-  it('TC3: Should update the high score when player scores higher than the current high score', () => {
-    highScore = 100; // แทนที่ด้วยคะแนนสูงสุดที่มีอยู่แล้ว
-    setPlayerScore(150); // แทนที่ด้วยฟังก์ชันที่จะกำหนดคะแนนใหม่
+  it('TC2: Should display the highest score achieved by the player', function () {
+    // Simulate a previous high score
+    const highScore = 100;
+    // Set the high score
+    // Example: context.localStorage.set('highScore', highScore);
 
-    updateHighScore(); // แทนที่ด้วยฟังก์ชันที่จะทำการอัปเดตคะแนนสูงสุด
-
-    expect(highScore).to.equal(150);
+    // Retrieve and check the displayed score
+    const scoreLabel = context.world.get('scoreLabel')[0];
+    expect(scoreLabel.text).to.equal(String(highScore));
   });
 
-  it('TC4: Should not update the high score when player scores equal to the current high score', () => {
-    highScore = 100; // แทนที่ด้วยคะแนนสูงสุดที่มีอยู่แล้ว
-    setPlayerScore(100); // แทนที่ด้วยฟังก์ชันที่จะกำหนดคะแนนใหม่
+  it('TC3: Should update the high score when the current score surpasses the previous high score', function () {
+    const highScore = 100;
+    // Set the high score
+    // Example: context.localStorage.set('highScore', highScore);
 
-    updateHighScore(); // แทนที่ด้วยฟังก์ชันที่จะทำการอัปเดตคะแนนสูงสุด
+    // Simulate a new score that surpasses the previous high score
+    const newScore = 120;
+    // Simulate updating the score in the game
 
-    expect(highScore).to.equal(100);
+    const updatedHighScore = context.localStorage.get('highScore');
+    expect(updatedHighScore).to.equal(newScore);
   });
 
-  it('TC5: Should not update the high score when player scores lower than the current high score', () => {
-    highScore = 100; // แทนที่ด้วยคะแนนสูงสุดที่มีอยู่แล้ว
-    setPlayerScore(80); // แทนที่ด้วยฟังก์ชันที่จะกำหนดคะแนนใหม่
+  it('TC4: Should not update the high score when the current score equals the previous high score', function () {
+    const highScore = 100;
+    // Set the high score
+    // Example: context.localStorage.set('highScore', highScore);
 
-    updateHighScore(); // แทนที่ด้วยฟังก์ชันที่จะทำการอัปเดตคะแนนสูงสุด
+    // Simulate a new score equal to the previous high score
+    const newScore = 100;
+    // Simulate updating the score in the game
 
-    expect(highScore).to.equal(100);
+    const updatedHighScore = context.localStorage.get('highScore');
+    expect(updatedHighScore).to.equal(highScore);
   });
+
+  it('TC5: Should not update the high score when the current score is lower than the previous high score', function () {
+    const highScore = 100;
+    // Set the high score
+    // Example: context.localStorage.set('highScore', highScore);
+
+    // Simulate a new score lower than the previous high score
+    const newScore = 80;
+    // Simulate updating the score in the game
+
+    const updatedHighScore = context.localStorage.get('highScore');
+    expect(updatedHighScore).to.equal(highScore);
+  });
+
+  // Add more test cases for edge cases or additional scenarios
+
 });
-

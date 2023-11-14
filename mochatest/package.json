@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "chai": "^4.3.10"
+    "chai": "^4.3.10",
+    "kaboom": "^3000.1.17"
   }
 }
