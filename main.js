@@ -232,11 +232,3 @@ kaboom({
   })
   // เริ่มเกมด้วยการเข้าสู่ฉาก "game" ด้วยระดับ 0 และคะแนน 0
   start("game", { level: 0, score: 0})
-
-function displayPlayerScore() {
-  return 'No score available';
-}
-module.exports = {
-  displayPlayerScore,
-  kaboom  
-}; 
