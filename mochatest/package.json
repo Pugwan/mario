@@ -11,7 +11,11 @@
   "license": "ISC",
   "dependencies": {
     "chai": "^4.3.10",
+
     "kaboom": "^3000.1.17",
     "mocha": "^10.2.0"
+
+  
+
   }
 }
