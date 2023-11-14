@@ -3,7 +3,7 @@ const {
   displayPlayerScore,
   setPlayerScore,
   updateHighScore
-} = require('./your-game-functions'); // แทนที่ด้วยชื่อฟังก์ชันจริง
+} = require('../main'); // แทนที่ด้วยชื่อฟังก์ชันจริง
 
 describe('Player Scores', () => {
   let playerScore = 0;
