@@ -1,23 +1,22 @@
 const { expect } = require('chai');
+const kaboom = require('kaboom');
+const fs = require('fs');
+const path = require('path');
 const {
   displayPlayerScore,
   setPlayerScore,
   updateHighScore
-} = require('../main'); // แทนที่ด้วยชื่อฟังก์ชันจริง
+} = fs.readFileSync(path.resolve(__dirname, '../main.js'), 'utf8');
 
-describe('Player Scores', () => {
+
+describe('Game Tests', function () {
+  let context;
   let playerScore = 0;
   let highScore = 0;
 
-  beforeEach(() => {
-    // กำหนดค่าเริ่มต้นของคะแนนที่ผู้เล่นมี
-    playerScore = 0;
-    highScore = 0;
-  });
-
   it('TC1: Should display "No score available" when player has no score', () => {
     const result = displayPlayerScore(); // แทนที่ด้วยฟังก์ชันที่แสดงคะแนนของผู้เล่น
-
+    
     expect(result).to.equal('No score available');
   });
 
@@ -54,6 +53,6 @@ describe('Player Scores', () => {
 
     expect(highScore).to.equal(100);
   });
+  // Add more test cases for edge cases or additional scenarios
+
 });
-
-

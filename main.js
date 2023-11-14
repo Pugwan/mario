@@ -1,12 +1,11 @@
 //IMPORTANT: Make sure to use Kaboom version 0.5.0 for this game by adding the correct script tag in the HTML file.
-
 kaboom({
     global: true,
     fullscreen: true,
     scale: 2,
     debug: true,
     clearColor: [0, 0, 0, 1],
-  })
+  });
   
   // Speed identifiers
   const MOVE_SPEED = 120
@@ -233,3 +232,11 @@ kaboom({
   })
   // เริ่มเกมด้วยการเข้าสู่ฉาก "game" ด้วยระดับ 0 และคะแนน 0
   start("game", { level: 0, score: 0})
+
+function displayPlayerScore() {
+  return 'No score available';
+}
+module.exports = {
+  displayPlayerScore,
+  kaboom  
+}; 
