@@ -29,34 +29,34 @@ describe('Game Tests', function () {
 
 
   it('TC1: Should display "No score available" when player has no score information in system', () => {
-    const result = displayPlayerScore(); // แทนที่ด้วยฟังก์ชันที่แสดงคะแนนของผู้เล่น
+    const result = displayPlayerScore(playerScore); // แทนที่ด้วยฟังก์ชันที่แสดงคะแนนของผู้เล่น
     expect(result).to.equal('No score available');
   });
 
   it('TC2: Should display the highest score when player has a score', () => {
-    highScore = 100; // แทนที่ด้วยคะแนนที่ต้องการทดสอบ
-    const result = displayPlayerScore(); // แทนที่ด้วยฟังก์ชันที่แสดงคะแนนของผู้เล่น
+    highScore = 100; // แทนที่ด้วยคะแนนที่ต้องการทดสอบตอนแรกเป็น0
+    const result = displayPlayerScore(highScore); // แทนที่ด้วยฟังก์ชันที่แสดงคะแนนของผู้เล่น
     expect(result).to.equal(`${highScore}`);
   });
 
   it('TC3: Should update the high score when player scores higher than the current high score', () => {
     highScore = 100; // แทนที่ด้วยคะแนนสูงสุดที่มีอยู่แล้ว
     setPlayerScore(150); // แทนที่ด้วยฟังก์ชันที่จะกำหนดคะแนนใหม่
-    highScore = updateHighScore(); // แทนที่ด้วยฟังก์ชันที่จะทำการอัปเดตคะแนนสูงสุด
+    highScore.updateHighScore(); // แทนที่ด้วยฟังก์ชันที่จะทำการอัปเดตคะแนนสูงสุด
     expect(highScore).to.equal(150);
   });
 
   it('TC4: Should not update the high score when player scores equal to the current high score', () => {
     highScore = 100; // แทนที่ด้วยคะแนนสูงสุดที่มีอยู่แล้ว
     setPlayerScore(100); // แทนที่ด้วยฟังก์ชันที่จะกำหนดคะแนนใหม่
-    highScore = updateHighScore(); // แทนที่ด้วยฟังก์ชันที่จะทำการอัปเดตคะแนนสูงสุด
+    highScore.updateHighScore(); // แทนที่ด้วยฟังก์ชันที่จะทำการอัปเดตคะแนนสูงสุด
     expect(highScore).to.equal(100);
   });
 
   it('TC5: Should not update the high score when player scores lower than the current high score', () => {
     highScore = 100; // แทนที่ด้วยคะแนนสูงสุดที่มีอยู่แล้ว
     setPlayerScore(80); // แทนที่ด้วยฟังก์ชันที่จะกำหนดคะแนนใหม่
-    highScore = updateHighScore(); // แทนที่ด้วยฟังก์ชันที่จะทำการอัปเดตคะแนนสูงสุด
+    highScore.updateHighScore(); // แทนที่ด้วยฟังก์ชันที่จะทำการอัปเดตคะแนนสูงสุด
     expect(highScore).to.equal(100);
   });
   
