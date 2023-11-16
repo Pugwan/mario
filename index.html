@@ -1,16 +1,83 @@
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <title>Mario Kaboom.js</title>
-    <style>
-      body {
-        margin: 0;
-        overflow: hidden;
-      }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />    
+    <title>Mario Game</title>
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
+    
+    <!-- <div id="app"></div> -->
+    <!-- <script type="module" src="/main.js"></script> -->
+
+    
+    <div id="modal" class="modal">
+      <div class="button-container">
+        <button id="register-button" onclick="toggleModal(event)">Register</button>
+        <button id="login-button" class="not-active" onclick="toggleModal(event)">Login</button>
+      </div>      
+
+      
+      <form onsubmit="register(event)" id="register-form">
+        <label for="register-email">Email</label>
+        <input type="text" id="register-email" value="email@example.com" required>
+        <label for="register-username">Username</label>
+        <input type="text" id="register-username" value="Username" required>
+        <label for="register-password">Password</label>
+        <input type="password" id="register-password" value="Password" pattern=".{6,}" required>
+        <br>
+        <input type="submit" value="Sign up">
+      </form>
+
+      <form onsubmit="login(event)" id="login-form" class="hidden">
+        <label for="login-email">Email</label>
+        <input type="text" id="login-email" placeholder="email@example.com" required>
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" placeholder="Password" pattern=".{8,}" required>
+        <br>
+        <input type="submit" value="Sign in">
+      </form>
+
+    </div>
+
+    <div class="info-container">
+      <button id="logout-button" class="hidden" onclick="logout()">Log out</button>
+      <h3 id="username"></h3>
+      <h3 id="highscore-tag" class="hidden">HighScore: <span id="highscore"></span></h3>
+
+    </div>
+
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@11.0.0"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/appwrite@latest"></script> -->
     <script src="https://kaboomjs.com/lib/0.5.0/kaboom.js"></script>
-    <script src="main.js"></script>
+    <script src="/main.js"></script>
+    <!-- <script>
+      const { Client, Account, Database, ID, Query } = Appwrite
+
+const projectId = '6554d9052e900c1eabaa'
+const databaseId = ''
+const collectionId = ''
+
+const client = new Client()
+    .setEndpoint('https://cloud.appwrite.io/v1')
+    .setProject(projectId)
+
+const account = new Account(client)
+
+function register(event) {
+  event.preventDefault();
+        const username = document.getElementById('register-username').value;
+        const password = document.getElementById('register-password').value;
+        console.log(username);
+        console.log(password);
+}
+    </script> -->
+
+
+    
+
   </body>
 </html>
