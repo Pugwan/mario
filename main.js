@@ -1,4 +1,3 @@
-
 const { Client, Account, Databases, ID , Query } = Appwrite;
 
 const projectId = '6554d9052e900c1eabaa';
@@ -21,6 +20,85 @@ async function isLoggedIn() {
         }
         return false
     }).catch(error => console.error(error))
+}
+
+async function getUserId(){
+    return account.get().then(response => {
+      return response.$id
+    }).catch(error => console.error(error))
+}
+
+function displayUserName(){
+    account.get().then(response => {      
+      const usernameElement = document.getElementById('username')
+      usernameElement.textContent = response.name
+    }).catch(error => console.error(error))
+}
+
+// function updateScore(score){
+//   const currentHighScore = document.getElementById('highscore').textContent
+//   if (Number(score) > Number(currentHighScore)) {
+//     getUserId().then(userId => {
+//       database.updateDocument(
+//         databaseId,
+//         collectionId,
+//         userId,
+//         {
+//           "userId": userId,
+//           "highscore": score
+//         }
+//       ).then(() => {
+//         showScore()
+//       }).then(error => console.error(error))
+//     })
+//   }
+// }
+
+// function checkScore(score){
+//   const currentHighScore = document.getElementById('highscore').textContent
+//   if (Number(score) > Number(currentHighScore)) {    
+//     return score;
+//   }
+//   if (Number(score) === Number(currentHighScore)) {    
+//     return currentHighScore;
+//   }
+//   if (Number(score) < Number(currentHighScore)) {    
+//     return currentHighScore;
+//   }
+// }
+
+function updatescoredb(score) {
+  const scorecurrent = score
+  getUserId().then(userId => {
+    database.updateDocument(
+      databaseId,
+      collectionId,
+      userId,
+      {
+        "userId": userId,
+        "highscore": scorecurrent
+      }
+    ).then(() => {
+      showScore()
+    }).then(error => console.error(error))
+  })
+}
+
+function showScore(){
+  getUserId().then(userId => {
+    console.log('userId',userId)
+      database.listDocuments(
+        databaseId,
+        collectionId,
+        [
+          Query.equal("userId",userId)
+        ]
+      ).then(response => {
+        const highscoreElement = document.getElementById('highscore')
+        highscoreElement.textContent = response.documents[0].highscore
+        console.log(response.highscore)
+      })
+  })
 }
 
 function register(e) {    
@@ -59,6 +137,8 @@ function login(e){
     ).then(() => {
         alert('Session created successfully!')
         showdisplay()
+        displayUserName()
+        showScore()
         client.subscribe("account", (response) => {
             console.log(response)
         })
@@ -358,9 +438,49 @@ function startgame(){
         })
       })
       //เหตุการณ์การแพ้ (lose scene)
+      // scene('lose', ({ score }) => {
+      //   add([text(score, 32), origin('center'), pos(width()/2, height()/ 2)]) //โชว์สกอร์ เมื่อแพ้
+      //   updateScore(score)
+      // })
+
       scene('lose', ({ score }) => {
-        add([text(score, 32), origin('center'), pos(width()/2, height()/ 2)]) //โชว์สกอร์ เมื่อแพ้
-      })
+        add([
+          text(score, 32),
+          origin('center'),
+          pos(width() / 2, height() / 2),
+        ]);        
+        
+        const buttonWidth = 200; // กำหนดความกว้างของปุ่ม
+        const buttonHeight = 40; // กำหนดความสูงของปุ่ม
+      
+        const restartButton = add([
+          rect(buttonWidth, buttonHeight),
+          pos(width() / 2, height() / 2 + 60),
+          origin('center'),
+          color(255, 255, 255),
+          layer('ui'),
+        ]);
+      
+        const buttonText = add([
+          text('Restart', 18),
+          pos(width() / 2, height() / 2 + 60),
+          origin('center'),
+          color(0, 0, 0),
+          layer('ui'),
+        ]);
+      
+        restartButton.action(() => {
+          if (restartButton.isHovered()) {
+            buttonText.color = rgb(0, 0, 255);
+            if (mouseIsClicked()) {
+              go('game', { level: 0, score: 0 });
+              updatescoredb(checkScore(score))
+            }
+          } else {
+            buttonText.color = rgb(0, 0, 0);
+          }
+        });
+      });
       // เริ่มเกมด้วยการเข้าสู่ฉาก "game" ด้วยระดับ 0 และคะแนน 0
       start("game", { level: 0, score: 0})
 }
