@@ -10,4 +10,3 @@ function checkScore(score){
       return currentHighScore;
     }
   }
-  export { checkScore };
