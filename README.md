@@ -1,8 +1,26 @@
-# mario
-A game of Mario using JavaScript and Kaboom.js
-hahaha
+# mario game
 
-setup-unittest
-npm install --save-dev jest
-npm install --save-dev jsdom
-npm test
+A game of Mario using JavaScript and Kaboom.js
+
+
+## Installation
+
+Install mario with npm
+
+```bash
+  cd mario
+  npm install 
+  npm run dev
+```
+    
+
+## Installation Test
+
+Install jesttest with npm
+
+```bash
+  cd unit-test-jest
+  npm install 
+  npm test
+```
+    
