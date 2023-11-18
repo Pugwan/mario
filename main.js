@@ -87,14 +87,24 @@ function updatescoredb(score,coin) {
   })
 }
 
-function list() {
-  return getUserId().then(userId => {
-    return database.listDocuments(
-      databaseId,
-      collectionId,
-      [Query.equal("userId", userId)]
-    );
-  });
+
+// function list() {
+//   return getUserId().then(userId => {
+//     return database.listDocuments(
+//       databaseId,
+//       collectionId,
+//       [Query.equal("userId", userId)]
+//     );
+//   });
+// }
+function listUserDocuments(userId) {
+  return database.listDocuments(
+    databaseId,
+    collectionId,
+    [
+      Query.equal("userId", userId)
+    ]
+  );
 }
 
 // function showScore() {

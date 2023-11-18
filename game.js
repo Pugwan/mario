@@ -354,7 +354,7 @@ function startgame(){
           buttonText.color = rgb(0, 0, 255);
           if (mouseIsClicked()) {
             go('game', { level: 0, score: 0 });
-            updatescoredb(checkScore(score));
+            updatescoredb(checkScore(score),checkCoin(score));
           }
         } else {
           buttonText.color = rgb(0, 0, 0);

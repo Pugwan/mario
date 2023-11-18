@@ -12,25 +12,61 @@ function checkScore(score){
   }
 
 function checkCoin(score){
-    const coin = document.getElementById('coin').textContent    
+    const coin = document.getElementById('coin').textContent
+    const maxCoins = 9999;
+    if(coin >= maxCoins){
+      return coin;
+    }    
     const sumcoin = Number(score) + Number(coin) ;   
-    return sumcoin;  
+      return sumcoin;  
+    }
+
+
+    
+
+    // function showhighScore() {
+    //   list().then(response => {
+    //     const highscoreElement = document.getElementById('highscore');
+    //     highscoreElement.textContent = response.documents[0].highscore;
+    //     console.log(response.documents[0].highscore);
+    //   });
+    // }
+    
+    // function showCoin(){
+    //   list().then(response => {
+    //     const coinElement = document.getElementById('coin');
+    //     coinElement.textContent = response.documents[0].coin;
+    //     console.log(response.coin);
+    //   });       
+    // }
+    function showCoin() {
+      return getUserId().then(userId => {
+        return listUserDocuments(userId).then(response => {
+          const coinElement = document.getElementById('coin');
+          if (response.documents && response.documents.length > 0) {
+            coinElement.textContent = response.documents[0].coin;
+            return response.documents[0].coin;
+          } else {
+            coinElement.textContent = '0'; // Set text content to '0' if no documents exist
+            return 0;
+          }
+        });
+      });
     }
 
     function showhighScore() {
-      list().then(response => {
-        const highscoreElement = document.getElementById('highscore');
-        highscoreElement.textContent = response.documents[0].highscore;
-        console.log(response.documents[0].highscore);
+      return getUserId().then(userId => {
+        return listUserDocuments(userId).then(response => {
+          const highscoreElement = document.getElementById('highscore');
+          if (response.documents && response.documents.length > 0) {
+            highscoreElement.textContent = response.documents[0].highscore;
+            return response.documents[0].highscore;
+          } else {
+            highscoreElement.textContent = '0'; // Set text content to '0' if no documents exist
+            return 0;
+          }
+        });
       });
-    }
-    
-    function showCoin(){
-      list().then(response => {
-        const coinElement = document.getElementById('coin');
-        coinElement.textContent = response.documents[0].coin;
-        console.log(response.coin);
-      });       
     }
 
 

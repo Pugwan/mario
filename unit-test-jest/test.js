@@ -1,37 +1,161 @@
 const { JSDOM } = require('jsdom');
 require('../functions');
 
-beforeEach(() => {
-  const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>');
-  global.document = dom.window.document;
-});
+// Create a basic DOM environment
+const dom = new JSDOM();
+global.document = dom.window.document;
 
-describe('checkScore function', () => {
-  test('TC1: Should display the highest score if the player has existing score data', () => {
-    document.body.innerHTML = '<div id="highscore">50</div>';
-
-    const result = global.checkScore(70);
-    expect(result).toBe(70);
-  });
-
-  test('TC2: Should update the highest score if the player achieves a new high score', () => {
+describe('checkScore function', () => {  
+    test('TC3: Should update the highest score if the player achieves a new high score', () => {
     document.body.innerHTML = '<div id="highscore">80</div>';
 
     const result = global.checkScore(85);
     expect(parseInt(result)).toBe(85);
   });
 
-  test('TC3: Should not change the highest score if the player achieves a score equal to the existing high score', () => {
+  test('TC4: Should not change the highest score if the player achieves a score equal to the existing high score', () => {
     document.body.innerHTML = '<div id="highscore">90</div>';
 
     const result = global.checkScore(90);
     expect(parseInt(result)).toBe(90);
   });
 
-  test('TC4: Should not change the highest score if the player achieves a score lower than the existing high score', () => {
+  test('TC5: Should not change the highest score if the player achieves a score lower than the existing high score', () => {
     document.body.innerHTML = '<div id="highscore">95</div>';
 
     const result = global.checkScore(85);
     expect(parseInt(result)).toBe(95);
   });
 });
+
+describe('showhighScore', () => {
+  test('TC1: should display 0 when the player has no score in the system', () => {
+    global.getUserId = jest.fn().mockResolvedValue('mockUserId');
+    global.listUserDocuments = jest.fn().mockResolvedValue({ documents: [] });
+    document.getElementById = jest.fn().mockReturnValue({
+      textContent: '', // Simulating an empty text content
+    });
+
+    return showhighScore().then((result) => {
+      expect(result).toBe(0);
+
+      // Check if getUserId and listUserDocuments have been called
+      expect(global.getUserId).toHaveBeenCalled();
+      expect(global.listUserDocuments).toHaveBeenCalledWith('mockUserId');
+      
+      // Check if document.getElementById has been called with the correct ID
+      expect(document.getElementById).toHaveBeenCalledWith('highscore');
+    });
+  });
+
+  test('TC2: should display the highest score when the player has a recorded score', () => {
+    const mockUserId = 'mockUserId';
+    const mockDocumentsResponse = {
+      documents: [
+        {
+          highscore: 20,
+        },
+      ],
+    };
+
+    global.getUserId = jest.fn().mockResolvedValue(mockUserId);
+    global.listUserDocuments = jest.fn().mockResolvedValue(mockDocumentsResponse);
+    document.getElementById = jest.fn().mockReturnValue({
+      textContent: '', // Simulating an empty text content
+    });
+
+    return showhighScore().then((result) => {
+      expect(result).toBe(20);
+
+      // Check if getUserId and listUserDocuments have been called
+      expect(global.getUserId).toHaveBeenCalled();
+      expect(global.listUserDocuments).toHaveBeenCalledWith(mockUserId);
+      
+      // Check if document.getElementById has been called with the correct ID
+      expect(document.getElementById).toHaveBeenCalledWith('highscore');
+    });
+  });
+});
+
+describe('showCoin', () => {
+  test('TC1: should display 0 when the player has no coin in the system', () => {
+    global.getUserId = jest.fn().mockResolvedValue('mockUserId');
+    global.listUserDocuments = jest.fn().mockResolvedValue({ documents: [] });
+    document.getElementById = jest.fn().mockReturnValue({
+      textContent: '', // Simulating an empty text content
+    });
+
+    return showCoin().then((result) => {
+      expect(result).toBe(0);
+
+      // Check if getUserId and listUserDocuments have been called
+      expect(global.getUserId).toHaveBeenCalled();
+      expect(global.listUserDocuments).toHaveBeenCalledWith('mockUserId');
+      
+      // Check if document.getElementById has been called with the correct ID
+      expect(document.getElementById).toHaveBeenCalledWith('coin');
+    });
+  });
+
+  test('TC2: should display the total coin when the player has a recorded coin', () => {
+    const mockUserId = 'mockUserId';
+    const mockDocumentsResponse = {
+      documents: [
+        {
+          coin: 35,
+        },
+      ],
+    };
+
+    global.getUserId = jest.fn().mockResolvedValue(mockUserId);
+    global.listUserDocuments = jest.fn().mockResolvedValue(mockDocumentsResponse);
+    document.getElementById = jest.fn().mockReturnValue({
+      textContent: '', // Simulating an empty text content
+    });
+
+    return showCoin().then((result) => {
+      expect(result).toBe(35);
+
+      // Check if getUserId and listUserDocuments have been called
+      expect(global.getUserId).toHaveBeenCalled();
+      expect(global.listUserDocuments).toHaveBeenCalledWith(mockUserId);
+      
+      // Check if document.getElementById has been called with the correct ID
+      expect(document.getElementById).toHaveBeenCalledWith('coin');
+    });
+  });
+});
+
+describe('checkCoin', () => {
+  test('TC1: should calculate total coins when the player has existing coins in the system', () => {
+    global.document.getElementById = jest.fn().mockReturnValue({
+      textContent: '2500',
+    });
+
+    const score = 10; // Mock score value
+    const result = checkCoin(score);
+
+    expect(result).toBe(2510); // Expected total coins: 5000 (existing coins) + 2000 (new score)
+    
+    // Check if document.getElementById has been called with the correct ID
+    expect(global.document.getElementById).toHaveBeenCalledWith('coin');
+  });
+
+  test('TC2: should not accumulate coins when the player already has 9999 coins', () => {
+    global.document.getElementById = jest.fn().mockReturnValue({
+      textContent: '9999',
+    });
+
+    const score = 20; // Mock score value
+    const result = checkCoin(score);
+
+    expect(result).toBe('9999'); // Expected total coins should remain 9999 (maximum limit reached)
+    
+    // Check if document.getElementById has been called with the correct ID
+    expect(global.document.getElementById).toHaveBeenCalledWith('coin');
+  });
+});
+
+
+
+
