@@ -2,7 +2,7 @@
 A game of Mario using JavaScript and Kaboom.js
 hahaha
 
-setuptest
-npm i mocha
-npm i chai
+setup-unittest
+npm install --save-dev jest
+npm install --save-dev jsdom
 npm test
