@@ -101,12 +101,12 @@ function showScore(){
   })
 }
 
-function register(e) {    
+function register(event) {    
     account.create(
         ID.unique(),
-        e.target.elements['register-email'].value,
-        e.target.elements['register-password'].value,
-        e.target.elements['register-username'].value
+        event.target.elements['register-email'].value,
+        event.target.elements['register-password'].value,
+        event.target.elements['register-username'].value
         
     ).then(response => {
         console.log(response);
@@ -121,19 +121,23 @@ function register(e) {
             
         )
         account.createEmailSession(
-            e.target.elements['register-username'].value,
-            e.target.elements['register-password'].value
+          event.target.elements['register-email'].value,
+          event.target.elements['register-password'].value,
+          event.target.elements['register-username'].value
         ).then(() => {
-            showdisplay()
+            alert('Session created successfully!')            
         })
-    }).catch(error => console.error(error))
-    e.preventDefault()
+    }).catch(error => {
+      alert('Failed to create session')
+      console.error(error)
+    })
+    event.preventDefault()
 }
 
-function login(e){
+function login(event){
     account.createEmailSession(
-        e.target.elements['login-email'].value,
-        e.target.elements['login-password'].value
+      event.target.elements['login-email'].value,
+      event.target.elements['login-password'].value
     ).then(() => {
         alert('Session created successfully!')
         showdisplay()
@@ -146,7 +150,7 @@ function login(e){
         alert('Failed to create session')
         console.error(error)
     })
-    e.preventDefault()
+    event.preventDefault()
 }
 
 function logout() {
@@ -159,19 +163,19 @@ function logout() {
     }).catch(error => console.error(error))
 }
 
-function toggleModal(e){
+function toggleModal(event){
     const registerForm = document.getElementById('register-form')
     const loginForm = document.getElementById('login-form')
     const registerButton = document.getElementById('register-button')
     const loginButton = document.getElementById('login-button')
 
-    if (e.srcElement.id === 'register-button') {
+    if (event.srcElement.id === 'register-button') {
         registerForm.classList.remove('hidden')
         loginForm.classList.add('hidden')
         registerButton.classList.remove('not-active')
         loginButton.classList.add('not-active')
     }
-    if (e.srcElement.id === 'login-button') {
+    if (event.srcElement.id === 'login-button') {
         registerForm.classList.add('hidden')
         loginForm.classList.remove('hidden')
         registerButton.classList.add('not-active')
@@ -474,7 +478,7 @@ function startgame(){
             buttonText.color = rgb(0, 0, 255);
             if (mouseIsClicked()) {
               go('game', { level: 0, score: 0 });
-              updatescoredb(checkScore(score))
+              updatescoredb(checkScore(score));
             }
           } else {
             buttonText.color = rgb(0, 0, 0);
@@ -484,4 +488,3 @@ function startgame(){
       // เริ่มเกมด้วยการเข้าสู่ฉาก "game" ด้วยระดับ 0 และคะแนน 0
       start("game", { level: 0, score: 0})
 }
-
