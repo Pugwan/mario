@@ -364,3 +364,14 @@ function startgame(){
     // เริ่มเกมด้วยการเข้าสู่ฉาก "game" ด้วยระดับ 0 และคะแนน 0
     start("game", { level: 0, score: 0})
 }
+
+if (typeof global !== 'undefined') {
+  global.startgame = startgame;
+
+}
+
+// แนบ checkScore กับ window object สำหรับบราวเซอร์
+if (typeof window !== 'undefined') {
+  window.startgame = startgame;
+
+}
