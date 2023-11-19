@@ -135,7 +135,7 @@ describe('checkCoin', () => {
     const score = 10; // Mock score value
     const result = checkCoin(score);
 
-    expect(result).toBe(2510); // Expected total coins: 5000 (existing coins) + 2000 (new score)
+    expect(result).toBe(2510); // Expected total coins: 2000 (existing coins) + 10 (new score)
     
     // Check if document.getElementById has been called with the correct ID
     expect(global.document.getElementById).toHaveBeenCalledWith('coin');
