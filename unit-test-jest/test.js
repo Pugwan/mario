@@ -5,22 +5,22 @@ require('../functions');
 const dom = new JSDOM();
 global.document = dom.window.document;
 
-describe('checkScore function', () => {  
-    test('TC3: Should update the highest score if the player achieves a new high score', () => {
+describe('checkScore', () => {  
+    test('TC1: Should update the highest score if the player achieves a new high score', () => {
     document.body.innerHTML = '<div id="highscore">80</div>';
 
     const result = global.checkScore(85);
     expect(parseInt(result)).toBe(85);
   });
 
-  test('TC4: Should not change the highest score if the player achieves a score equal to the existing high score', () => {
+  test('TC2: Should not change the highest score if the player achieves a score equal to the existing high score', () => {
     document.body.innerHTML = '<div id="highscore">90</div>';
 
     const result = global.checkScore(90);
     expect(parseInt(result)).toBe(90);
   });
 
-  test('TC5: Should not change the highest score if the player achieves a score lower than the existing high score', () => {
+  test('TC3: Should not change the highest score if the player achieves a score lower than the existing high score', () => {
     document.body.innerHTML = '<div id="highscore">95</div>';
 
     const result = global.checkScore(85);
@@ -155,6 +155,9 @@ describe('checkCoin', () => {
     expect(document.getElementById).toHaveBeenCalledWith('coin');
   });
 });
+
+
+
 
 
 
