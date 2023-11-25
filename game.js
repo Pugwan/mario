@@ -53,8 +53,357 @@ function startgame(){
     loadSprite('treemusyellow','2egKhaC.png')
     loadSprite('dirt wall','4mmKcbT.jpg')
     loadSprite('mincraftdirt','yjDQIM4.png')
+
+    loadSprite('rockman','Fk6Vnoy.png')
+    loadSprite('test','G1FcgQW.png')
+
     
-    //Hello
+    
+    scene("menu", () => {
+      add([
+        text("Mario Bros with Js"),
+        pos(width() / 2, height() * 0.2),
+        origin("center"),
+        scale(3),
+      ]);
+    
+      add([
+        rect(width() * 0.2, height() * 0.04),
+        pos(width() / 2, height() * 0.4),
+        origin("center"),
+        "button",
+        {
+          clickAction: () => go("game", { level: 0, score: 0 }),
+        },
+      ]);
+    
+      add([
+        text("Play game"),
+        pos(width() / 2, height() * 0.4),
+        origin("center"),
+        color(0, 0, 0),
+      ]);
+    
+      add([
+        rect(width() * 0.2, height() * 0.04),
+        pos(width() / 2, height() * 0.5),
+        origin("center"),
+        "button",
+        {
+          clickAction: () => go("collection"),
+        },
+      ]);
+    
+      add([
+        text("Collections"),
+        pos(width() / 2, height() * 0.5),
+        origin("center"),
+        color(0, 0, 0),
+      ]);
+  
+      add([
+        rect(width() * 0.2, height() * 0.04),
+        pos(width() / 2, height() * 0.6),
+        origin("center"),
+        "button",
+        {
+          clickAction: () => go("shop"),
+        },
+      ]);
+    
+      add([
+        text("Shop"),
+        pos(width() / 2, height() * 0.6),
+        origin("center"),
+        color(0, 0, 0),
+      ]);
+      
+      
+      
+    
+      action("button", b => {
+        if (b.isHovered()) {
+          b.use(color(0.7, 0.7, 0.7));
+        } else {
+          b.use(color(1, 1, 1));
+        }
+    
+        if (b.isClicked()) {
+          b.clickAction();
+        }
+      });
+    });
+    start("menu");
+// โค้ดสำหรับฉาก "shop" ในเกม Kaboom.js
+
+function buyItem(item) {
+  // ทำการซื้อสินค้าโดยเพิ่มข้อมูลเกี่ยวกับ item ลงในฐานข้อมูล
+  // ในกรณีนี้ เราจะให้ item เป็น parameter และนำไปใช้ในการเพิ่มข้อมูลลงในฐานข้อมูลต่อไป
+  // ตัวอย่างเช่น:
+  console.log(item.name)
+
+  getUserId().then(userId => {
+    const newDocumentId = ID.unique();
+    database.createDocument(
+      databaseId,
+      '6562165e1490741e8632',
+      newDocumentId,
+      {
+        "userId": userId,              
+        "skins": item.name
+      }
+      
+    ).then(() => {
+      alert('Item purchased successfully!');
+    }).catch(error => {
+      alert('Failed to purchase item');
+      console.error(error);
+    });
+  })
+}
+
+function displayShopItems(items) {
+  
+  items.forEach((item, index) => {
+    // สร้างองค์ประกอบเพื่อแสดงรายการสินค้าและปุ่มซื้อสินค้า
+    add([      
+      sprite(item.name), // โหลดภาพจาก URL ในฐานข้อมูล
+      pos(100, 30 + index * 200), // ตำแหน่งของรูปภาพ
+      scale(4), // ปรับขนาดของรูปภาพตามที่ต้องการ
+    ]);
+    add([
+        text(item.name),
+        pos(100, 140 + index * 200),
+        color(1, 1, 1),
+    ]);
+
+    add([
+        text(`Price: $${item.price}`),
+        pos(100, 160 + index * 200),
+        color(1, 1, 1),
+    ]);
+
+    add([
+        rect(80, 20),
+        pos(100, 180 + index * 200),
+        "button",
+        {
+            clickAction: () => {                
+                 buyItem(item);                 
+            },
+        },
+    ]);
+
+    add([
+        text("Buy"),
+        pos(125, 186 + index * 200),
+        color(0, 0, 0),
+    ]);
+
+    add([
+      rect(160, 20),
+      pos(400, 380),
+      "button",
+      {
+          clickAction: () => {
+            go("menu")
+          },
+      },
+  ]);
+
+  add([
+      text("Back to menu"),
+      pos(425, 386),
+      color(0, 0, 0),
+  ]);
+
+    action("button", (b) => {
+        if (b.isHovered()) {
+            b.use(color(0.7, 0.7, 0.7));
+        } else {
+            b.use(color(1, 1, 1));
+        }
+
+        if (b.isClicked()) {
+            b.clickAction();
+        }
+    });
+});
+}
+  scene("shop", () => {     
+    const collectionIdskin = '6561fec3d1f900b246e5';
+    // การแสดงรายการสินค้าและปุ่มซื้อสินค้า
+    database.listDocuments(databaseId,collectionIdskin).then(response => {
+        const items = response.documents;
+        displayShopItems(items);
+    }).catch(error => {
+        console.error(error); // แสดงข้อผิดพลาดในการดึงข้อมูล
+    });
+
+  });
+  
+function displayShopItems(items) {
+  
+  items.forEach((item, index) => {
+    // สร้างองค์ประกอบเพื่อแสดงรายการสินค้าและปุ่มซื้อสินค้า
+    add([      
+      sprite(item.name), // โหลดภาพจาก URL ในฐานข้อมูล
+      pos(100, 30 + index * 200), // ตำแหน่งของรูปภาพ
+      scale(4), // ปรับขนาดของรูปภาพตามที่ต้องการ
+    ]);
+    add([
+        text(item.name),
+        pos(100, 140 + index * 200),
+        color(1, 1, 1),
+    ]);
+
+    add([
+        text(`Price: $${item.price}`),
+        pos(100, 160 + index * 200),
+        color(1, 1, 1),
+    ]);
+
+    add([
+        rect(80, 20),
+        pos(100, 180 + index * 200),
+        "button",
+        {
+            clickAction: () => {                
+                 buyItem(item);                 
+            },
+        },
+    ]);
+
+    add([
+        text("Buy"),
+        pos(125, 186 + index * 200),
+        color(0, 0, 0),
+    ]);
+
+    add([
+      rect(160, 20),
+      pos(400, 380),
+      "button",
+      {
+          clickAction: () => {
+            go("menu")
+          },
+      },
+  ]);
+
+  add([
+      text("Back to menu"),
+      pos(425, 386),
+      color(0, 0, 0),
+  ]);
+
+    action("button", (b) => {
+        if (b.isHovered()) {
+            b.use(color(0.7, 0.7, 0.7));
+        } else {
+            b.use(color(1, 1, 1));
+        }
+
+        if (b.isClicked()) {
+            b.clickAction();
+        }
+    });
+});
+}
+
+function displaycolItems(items) {
+  const uniqueSkins = []; // เก็บ skins ที่ไม่ซ้ำกัน
+  const uniqueItems = []; // เก็บ items ที่ไม่ซ้ำกัน
+
+  items.forEach(item => {
+    if (!uniqueSkins.includes(item.skins)) {
+      uniqueSkins.push(item.skins);      
+    }
+  });
+  console.log(uniqueSkins)
+  items.forEach((item, index) => {
+    // สร้างองค์ประกอบเพื่อแสดงรายการสินค้าและปุ่มซื้อสินค้า
+    add([      
+      sprite(uniqueSkins[index]), // โหลดภาพจาก URL ในฐานข้อมูล
+      pos(100, 30 + index * 200), // ตำแหน่งของรูปภาพ
+      scale(4), // ปรับขนาดของรูปภาพตามที่ต้องการ
+    ]);
+    add([
+        text(uniqueSkins[index]),
+        pos(100, 140 + index * 200),
+        color(1, 1, 1),
+    ]);    
+
+    add([
+        rect(80, 20),
+        pos(100, 180 + index * 200),
+        "button",
+        {
+            clickAction: () => {                
+                                
+            },
+        },
+    ]);
+
+    add([
+        text("Eqip"),
+        pos(125, 186 + index * 200),
+        color(0, 0, 0),
+    ]);
+
+    add([
+      rect(160, 20),
+      pos(400, 380),
+      "button",
+      {
+          clickAction: () => {
+            go("menu")
+          },
+      },
+  ]);
+  add([
+    text("Back to menu"),
+    pos(425, 386),
+    color(0, 0, 0),
+  ]);
+  
+  action("button", (b) => {
+      if (b.isHovered()) {
+          b.use(color(0.7, 0.7, 0.7));
+      } else {
+          b.use(color(1, 1, 1));
+      }
+  
+      if (b.isClicked()) {
+          b.clickAction();
+      }
+  }); 
+   
+});
+
+}
+
+  // Create a new scene for displaying the collection
+  scene("collection", () => {    
+    getUserId().then(userId => {        
+      database.listDocuments(
+        databaseId,
+        '6562165e1490741e8632',
+        [
+          Query.equal("userId", userId)
+        ]          
+      ).then(response => {
+        const items = response.documents;
+        console.log(items)
+        displaycolItems(items);
+      }).catch(error => {
+        console.error(error); // แสดงข้อผิดพลาดในการดึงข้อมูล
+      });
+    });
+  });
+  
+  
+  
     //กำหนดฉากและตำแหน่งสิ่งของ แต่ละระดับ
     scene("game", ({ level, score }) => {
       layers(['bg', 'obj', 'ui'], 'obj')
@@ -207,7 +556,7 @@ function startgame(){
       }
        //สร้างตัวละคร
       const player = add([
-        sprite('mario'), solid(),
+        sprite('test'), solid(),
         pos(30, 0),
         body(),//ทำให้มันมีbody เพื่อให้มันหล่นตามแรงโน้มถ่วงได้
         big(),
@@ -330,20 +679,36 @@ function startgame(){
         pos(width() / 2, height() / 2),
       ]);        
       
-      const buttonWidth = 200; // กำหนดความกว้างของปุ่ม
-      const buttonHeight = 40; // กำหนดความสูงของปุ่ม
+      const buttonWidth = 150; // กำหนดความกว้างของปุ่ม
+      const buttonHeight = 30; // กำหนดความสูงของปุ่ม
     
       const restartButton = add([
         rect(buttonWidth, buttonHeight),
-        pos(width() / 2, height() / 2 + 60),
+        pos(width() / 2 -120, height() / 2 + 60),
         origin('center'),
         color(255, 255, 255),
         layer('ui'),
       ]);
     
       const buttonText = add([
-        text('Restart', 18),
-        pos(width() / 2, height() / 2 + 60),
+        text('Restart', 14),
+        pos(width() / 2 -120, height() / 2 + 60),
+        origin('center'),
+        color(0, 0, 0),
+        layer('ui'),
+      ]);
+
+      const backButton = add([
+        rect(buttonWidth, buttonHeight),
+        pos(width() / 2 + 120, height() / 2 + 60), // ปรับตำแหน่งให้ขวาของปุ่ม Restart
+        origin('center'),
+        color(255, 255, 255),
+        layer('ui'),
+      ]);
+      
+      const backButtonText = add([
+        text('Back', 14),
+        pos(width() / 2 + 120, height() / 2 + 60), // ปรับตำแหน่งให้ขวาของปุ่ม Restart
         origin('center'),
         color(0, 0, 0),
         layer('ui'),
@@ -360,9 +725,24 @@ function startgame(){
           buttonText.color = rgb(0, 0, 0);
         }
       });
+
+      backButton.action(() => {
+        if (backButton.isHovered()) {
+          backButtonText.color = rgb(0, 0, 255);
+          if (mouseIsClicked()) {
+            go('menu'); // ส่งผู้เล่นกลับไปยัง scene 'menu'
+          }
+        } else {
+          backButtonText.color = rgb(0, 0, 0);
+        }
+      });
     });
+    
+    
+    
+    
     // เริ่มเกมด้วยการเข้าสู่ฉาก "game" ด้วยระดับ 0 และคะแนน 0
-    start("game", { level: 0, score: 0})
+    // start("game", { level: 0, score: 0})
 }
 
 if (typeof global !== 'undefined') {

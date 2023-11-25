@@ -80,6 +80,7 @@ function updatescoredb(score,coin) {
         "highscore": scorecurrent,        
         "coin": coincurrent
       }
+      
     ).then(() => {
       showhighScore()      
       showCoin()
@@ -142,7 +143,17 @@ function register(event) {
                 "coin": 0
             }         
             
-        )
+        ),
+        database.createDocument(
+          databaseId,
+          '6562165e1490741e8632',
+          ID.unique(),
+          {
+            "userId": response.$id,              
+            "skins": "mario"
+          }     
+          
+      ),
         account.createEmailSession(
           event.target.elements['register-email'].value,
           event.target.elements['register-password'].value,
@@ -162,14 +173,16 @@ function login(event){
       event.target.elements['login-email'].value,
       event.target.elements['login-password'].value
     ).then(() => {
-        alert('Session created successfully!')
+        alert('Session created successfully!')              
         showdisplay()
         displayUserName()
         showhighScore()
         showCoin()
+        
         client.subscribe("account", (response) => {
             console.log(response)
         })
+        
     }).catch(error => {
         alert('Failed to create session')
         console.error(error)
@@ -220,7 +233,7 @@ function showdisplay() {
             highscoreTag.classList.remove('hidden')
             const coinTag = document.getElementById('coin-tag')
             coinTag.classList.remove('hidden')
-            startgame()
+            startgame();
         } else {
             const modalElement = document.getElementById('modal')
             modalElement.classList.remove('hidden')
@@ -236,4 +249,8 @@ function showdisplay() {
             if (canvas) canvas.remove()
         }
     }).catch(error => console.error(error))
+}
+
+if (typeof global !== 'undefined') {
+  global.getUserId = getUserId;
 }
