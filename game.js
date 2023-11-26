@@ -137,29 +137,81 @@ function startgame(){
     });
     start("menu");
 
+    function checkcointobuy(item) {
+      return getUserId()
+        .then(userId => {
+          return database
+            .listDocuments(databaseId, '6555bf92364ff69f80d2', [
+              Query.equal("userId", userId)
+            ])
+            .then(response => {
+              const userItems = response.documents;
+              const skinprice = item.price;
+              const totalcoin = userItems[0].coin;
+              if (totalcoin < skinprice) {
+                return 'Not enough coin';
+              } else {
+                const sum = totalcoin - skinprice;
+                return sum;
+              }
+            })
+            .catch(error => {
+              console.error(error);
+              throw error; // Re-throw the error to propagate it
+            });
+        })
+        .catch(error => {
+          console.error(error);
+          throw error; // Re-throw the error to propagate it
+        });
+    }
+    
+    
 
-function buyItem(item) {  
-  getUserId().then(userId => {
-    const newDocumentId = ID.unique();
-    database.createDocument(
-      databaseId,
-      '6562165e1490741e8632',
-      newDocumentId,
-      {
-        "userId": userId,              
-        "skins": item.name
-      }
-      
-    ).then(() => {
-      alert('Item purchased successfully!');
-      go("shop"); 
-    }).catch(error => {
-      alert('Failed to purchase item');
-      go("shop"); 
-      console.error(error);
-    });
-  })
-}
+
+    function buyItem(item) {
+      checkcointobuy(item)
+        .then(coincurrent => {
+          if (typeof coincurrent === 'number') { // เพิ่มเงื่อนไขตรวจสอบว่า coincurrent เป็นตัวเลขหรือไม่
+            getUserId().then(userId => {
+              const newDocumentId = ID.unique();
+              database.createDocument(
+                databaseId,
+                '6562165e1490741e8632',
+                newDocumentId,
+                {
+                  "userId": userId,
+                  "skins": item.name
+                }
+              );
+              database.updateDocument(
+                databaseId,
+                '6555bf92364ff69f80d2',
+                userId,
+                {
+                  "userId": userId,
+                  "coin": coincurrent
+                }
+              ).then(() => {
+                alert('Buy successfully!');
+                go("shop");
+                showCoin();
+              }).catch(error => {
+                go("shop");
+                showCoin();
+                console.error(error);
+              });
+            });
+          } else {            
+            alert(coincurrent+'!');
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+    
+    
 
 
 
@@ -232,7 +284,7 @@ function buyItem(item) {
             {
               clickAction: () => {
                 if (!clicked) {
-                  buyItem(item);
+                  buyItem(item);           
                   clicked = true;                  
                 }                               
               },
@@ -299,8 +351,7 @@ function buyItem(item) {
       .then(response => {
         const userItems = response.documents;
         const isItemInCollection = userItems.length > 0;
-        resolve(isItemInCollection);
-        console.log(resolve(isItemInCollection))
+        resolve(isItemInCollection);        
       })
       .catch(error => {
         reject(error);
@@ -567,7 +618,7 @@ function displaycolItems(items) {
       }
        //สร้างตัวละคร
       const player = add([
-        sprite('Megaman'), solid(),
+        sprite('mario'), solid(),
         pos(30, 0),
         body(),//ทำให้มันมีbody เพื่อให้มันหล่นตามแรงโน้มถ่วงได้
         big(),
@@ -742,6 +793,7 @@ function displaycolItems(items) {
           backButtonText.color = rgb(0, 0, 255);
           if (mouseIsClicked()) {
             go('menu'); // ส่งผู้เล่นกลับไปยัง scene 'menu'
+            updatescoredb(checkScore(score),checkCoin(score));
           }
         } else {
           backButtonText.color = rgb(0, 0, 0);

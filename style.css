@@ -8,6 +8,10 @@ body {
   overflow: hidden;
   background-color: black;
   color: white;  
+  /* background-image: url('background_2.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed; */
 }
 
 .modal {
@@ -57,3 +61,22 @@ form input[type=submit] {
 h3 {
   color: white;
 }
+
+h1 {
+  color: white;
+  font-size: 60px;
+}
+
+.home {
+  text-align: center;
+  margin-top: 150px;  
+}
+
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 100px;
+  width: 500px;
+}
+  

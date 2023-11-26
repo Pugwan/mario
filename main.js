@@ -67,26 +67,31 @@ function displayUserName(){
 //   }
 // }
 
-function updatescoredb(score,coin) {
+function updatescoredb(score, coin) {
   const scorecurrent = score;
-  const coincurrent = coin;    
+  const coincurrent = coin;
+
   getUserId().then(userId => {
     database.updateDocument(
       databaseId,
-      collectionId,
+      '6555bf92364ff69f80d2',
       userId,
       {
         "userId": userId,
-        "highscore": scorecurrent,        
+        "highscore": scorecurrent,
         "coin": coincurrent
       }
-      
     ).then(() => {
-      showhighScore()      
-      showCoin()
-    }).then(error => console.error(error))
-  })
+      showhighScore();
+      showCoin();
+    }).catch(error => {
+      console.error("Error updating document:", error);
+    });
+  }).catch(err => {
+    console.error("Error fetching userId:", err);
+  });
 }
+
 
 
 // function list() {
