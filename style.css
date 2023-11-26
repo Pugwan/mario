@@ -57,26 +57,3 @@ form input[type=submit] {
   right: 10px;
   text-align: right;
 }
-
-h3 {
-  color: white;
-}
-
-h1 {
-  color: white;
-  font-size: 60px;
-}
-
-.home {
-  text-align: center;
-  margin-top: 150px;  
-}
-
-img {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 100px;
-  width: 500px;
-}
-  

@@ -56,7 +56,8 @@ function startgame(){
 
     loadSprite('Megaman','egbzcIw.png')
     loadSprite('Lukaku','G1FcgQW.png')
-    
+    //custom
+    let custom = 'mario';
     
 
     
@@ -164,10 +165,7 @@ function startgame(){
           console.error(error);
           throw error; // Re-throw the error to propagate it
         });
-    }
-    
-    
-
+    } 
 
     function buyItem(item) {
       checkcointobuy(item)
@@ -210,10 +208,6 @@ function startgame(){
           console.error(error);
         });
     }
-    
-    
-
-
 
   scene("shop", () => {     
     const collectionIdskin = '6561fec3d1f900b246e5';
@@ -358,11 +352,8 @@ function startgame(){
       });
     });
   });
-  }
+  }   
   
-  
-  
-
 function displaycolItems(items) {  
     const itemsPerRow = 3; // จำนวนสินค้าต่อแถว
     const offsetX = 150; // ระยะห่างแนวนอน
@@ -375,43 +366,49 @@ function displaycolItems(items) {
     items.forEach((item, index) => {
       const xPos = startX + col * offsetX;
       const yPos = startY + row * offsetY;
-  
-      add([      
-        sprite(item.skins),
-        pos(xPos, yPos),
-        scale(2.5), // ลดขนาดลงเล็กน้อย
+
+      add([
+          sprite(item.skins),
+          pos(xPos, yPos),
+          scale(2.5),
       ]);
-  
+
       add([
-        text(item.skins),
-        pos(xPos, yPos + 80), // ย้ายข้อความขึ้นมาบนลูกศร
-        color(1, 1, 1),
-      ]);  
-      
-      let clicked = false;
+          text(item.skins),
+          pos(xPos, yPos + 80),
+          color(1, 1, 1),
+      ]);
+
+      let buttonText = item.skins === custom ? 'Equipped' : 'Equip'; // ตรวจสอบ item.skins ว่าตรงกับ custom หรือไม่
+      let isDisabled = item.skins === custom; // กำหนดค่าเพื่อให้ปุ่ม disable หรือ enable ตามเงื่อนไข
+
       add([
-        rect(70, 20),
-        pos(xPos, yPos + 105), // ปรับตำแหน่งปุ่มซื้อสินค้า
-        "button",
-        {
-          clickAction: () => {                
-                         
+          rect(70, 20),
+          pos(xPos, yPos + 105),
+          "button",
+          {
+              clickAction: () => {
+                  if (!isDisabled) {
+                      custom = item.skins; // เมื่อคลิกปุ่ม "Equip" ให้กำหนดค่า custom เป็น item.skins ที่เลือก
+                  }
+                  go("collection")
+              },
+              isEnabled: !isDisabled, // กำหนดสถานะของปุ่ม
           },
-        },
       ]);
-  
+
       add([
-        text("Eqip"),
-        pos(xPos + 20, yPos + 111), // ปรับตำแหน่งข้อความปุ่มซื้อสินค้า
-        color(0, 0, 0),
+          text(buttonText), // แสดงข้อความบนปุ่มตามเงื่อนไข
+          pos(xPos + 5, yPos + 111),
+          color(0, 0, 0),
       ]);
-  
+
       col++;
       if (col >= itemsPerRow) {
-        col = 0;
-        row++;
+          col = 0;
+          row++;
       }
-    });
+  });
   
     // ปุ่มกลับไปที่เมนู
     add([
@@ -618,7 +615,7 @@ function displaycolItems(items) {
       }
        //สร้างตัวละคร
       const player = add([
-        sprite('mario'), solid(),
+        sprite(custom), solid(),
         pos(30, 0),
         body(),//ทำให้มันมีbody เพื่อให้มันหล่นตามแรงโน้มถ่วงได้
         big(),
