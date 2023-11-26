@@ -54,8 +54,10 @@ function startgame(){
     loadSprite('dirt wall','4mmKcbT.jpg')
     loadSprite('mincraftdirt','yjDQIM4.png')
 
-    loadSprite('rockman','Fk6Vnoy.png')
-    loadSprite('test','G1FcgQW.png')
+    loadSprite('Megaman','egbzcIw.png')
+    loadSprite('Lukaku','G1FcgQW.png')
+    
+    
 
     
     
@@ -134,14 +136,9 @@ function startgame(){
       });
     });
     start("menu");
-// โค้ดสำหรับฉาก "shop" ในเกม Kaboom.js
 
-function buyItem(item) {
-  // ทำการซื้อสินค้าโดยเพิ่มข้อมูลเกี่ยวกับ item ลงในฐานข้อมูล
-  // ในกรณีนี้ เราจะให้ item เป็น parameter และนำไปใช้ในการเพิ่มข้อมูลลงในฐานข้อมูลต่อไป
-  // ตัวอย่างเช่น:
-  console.log(item.name)
 
+function buyItem(item) {  
   getUserId().then(userId => {
     const newDocumentId = ID.unique();
     database.createDocument(
@@ -155,81 +152,17 @@ function buyItem(item) {
       
     ).then(() => {
       alert('Item purchased successfully!');
+      go("shop"); 
     }).catch(error => {
       alert('Failed to purchase item');
+      go("shop"); 
       console.error(error);
     });
   })
 }
 
-function displayShopItems(items) {
-  
-  items.forEach((item, index) => {
-    // สร้างองค์ประกอบเพื่อแสดงรายการสินค้าและปุ่มซื้อสินค้า
-    add([      
-      sprite(item.name), // โหลดภาพจาก URL ในฐานข้อมูล
-      pos(100, 30 + index * 200), // ตำแหน่งของรูปภาพ
-      scale(4), // ปรับขนาดของรูปภาพตามที่ต้องการ
-    ]);
-    add([
-        text(item.name),
-        pos(100, 140 + index * 200),
-        color(1, 1, 1),
-    ]);
 
-    add([
-        text(`Price: $${item.price}`),
-        pos(100, 160 + index * 200),
-        color(1, 1, 1),
-    ]);
 
-    add([
-        rect(80, 20),
-        pos(100, 180 + index * 200),
-        "button",
-        {
-            clickAction: () => {                
-                 buyItem(item);                 
-            },
-        },
-    ]);
-
-    add([
-        text("Buy"),
-        pos(125, 186 + index * 200),
-        color(0, 0, 0),
-    ]);
-
-    add([
-      rect(160, 20),
-      pos(400, 380),
-      "button",
-      {
-          clickAction: () => {
-            go("menu")
-          },
-      },
-  ]);
-
-  add([
-      text("Back to menu"),
-      pos(425, 386),
-      color(0, 0, 0),
-  ]);
-
-    action("button", (b) => {
-        if (b.isHovered()) {
-            b.use(color(0.7, 0.7, 0.7));
-        } else {
-            b.use(color(1, 1, 1));
-        }
-
-        if (b.isClicked()) {
-            b.clickAction();
-        }
-    });
-});
-}
   scene("shop", () => {     
     const collectionIdskin = '6561fec3d1f900b246e5';
     // การแสดงรายการสินค้าและปุ่มซื้อสินค้า
@@ -242,144 +175,222 @@ function displayShopItems(items) {
 
   });
   
-function displayShopItems(items) {
+  function displayShopItems(items) {
+    const itemsPerRow = 3; // จำนวนสินค้าต่อแถว
+    const offsetX = 150; // ระยะห่างแนวนอน
+    const offsetY = 200; // ระยะห่างแนวตั้ง
+    const startX = 50; // ตำแหน่ง x ของสินค้าแถวแรก
+    const startY = 50; // ตำแหน่ง y ของสินค้าแถวแรก
+    let row = 0;
+    let col = 0;
   
-  items.forEach((item, index) => {
-    // สร้างองค์ประกอบเพื่อแสดงรายการสินค้าและปุ่มซื้อสินค้า
-    add([      
-      sprite(item.name), // โหลดภาพจาก URL ในฐานข้อมูล
-      pos(100, 30 + index * 200), // ตำแหน่งของรูปภาพ
-      scale(4), // ปรับขนาดของรูปภาพตามที่ต้องการ
-    ]);
-    add([
+    items.forEach((item, index) => {
+      const xPos = startX + col * offsetX;
+      const yPos = startY + row * offsetY;
+  
+      add([      
+        sprite(item.name),
+        pos(xPos, yPos),
+        scale(2.5), // ลดขนาดลงเล็กน้อย
+      ]);
+  
+      add([
         text(item.name),
-        pos(100, 140 + index * 200),
+        pos(xPos, yPos + 80), // ย้ายข้อความขึ้นมาบนลูกศร
         color(1, 1, 1),
-    ]);
-
-    add([
-        text(`Price: $${item.price}`),
-        pos(100, 160 + index * 200),
-        color(1, 1, 1),
-    ]);
-
-    add([
-        rect(80, 20),
-        pos(100, 180 + index * 200),
-        "button",
-        {
-            clickAction: () => {                
-                 buyItem(item);                 
-            },
-        },
-    ]);
-
-    add([
-        text("Buy"),
-        pos(125, 186 + index * 200),
-        color(0, 0, 0),
-    ]);
-
-    add([
-      rect(160, 20),
-      pos(400, 380),
-      "button",
-      {
-          clickAction: () => {
-            go("menu")
-          },
-      },
-  ]);
-
-  add([
-      text("Back to menu"),
-      pos(425, 386),
-      color(0, 0, 0),
-  ]);
-
-    action("button", (b) => {
-        if (b.isHovered()) {
-            b.use(color(0.7, 0.7, 0.7));
-        } else {
-            b.use(color(1, 1, 1));
-        }
-
-        if (b.isClicked()) {
-            b.clickAction();
-        }
-    });
-});
-}
-
-function displaycolItems(items) {
-  const uniqueSkins = []; // เก็บ skins ที่ไม่ซ้ำกัน
-  const uniqueItems = []; // เก็บ items ที่ไม่ซ้ำกัน
-
-  items.forEach(item => {
-    if (!uniqueSkins.includes(item.skins)) {
-      uniqueSkins.push(item.skins);      
-    }
-  });
-  console.log(uniqueSkins)
-  items.forEach((item, index) => {
-    // สร้างองค์ประกอบเพื่อแสดงรายการสินค้าและปุ่มซื้อสินค้า
-    add([      
-      sprite(uniqueSkins[index]), // โหลดภาพจาก URL ในฐานข้อมูล
-      pos(100, 30 + index * 200), // ตำแหน่งของรูปภาพ
-      scale(4), // ปรับขนาดของรูปภาพตามที่ต้องการ
-    ]);
-    add([
-        text(uniqueSkins[index]),
-        pos(100, 140 + index * 200),
-        color(1, 1, 1),
-    ]);    
-
-    add([
-        rect(80, 20),
-        pos(100, 180 + index * 200),
-        "button",
-        {
-            clickAction: () => {                
-                                
-            },
-        },
-    ]);
-
-    add([
-        text("Eqip"),
-        pos(125, 186 + index * 200),
-        color(0, 0, 0),
-    ]);
-
-    add([
-      rect(160, 20),
-      pos(400, 380),
-      "button",
-      {
-          clickAction: () => {
-            go("menu")
-          },
-      },
-  ]);
-  add([
-    text("Back to menu"),
-    pos(425, 386),
-    color(0, 0, 0),
-  ]);
+      ]);
   
-  action("button", (b) => {
+      add([
+        text(`Price: $${item.price}`),
+        pos(xPos, yPos + 100), // ย้ายข้อความราคาขึ้นมาบนลูกศร
+        color(1, 1, 1),
+      ]);
+      let clicked = false;      
+      checkItemInUserCollection(item.name)
+      .then(isItemInCollection => {
+        if (isItemInCollection) {
+          const button = add([
+            rect(70, 20),
+            pos(xPos, yPos + 115),
+            "button",
+            {
+              clickAction: () => {
+                alert('Alrady have skin');              
+              },
+            },
+          ]);
+          add([
+            text("Obtain"),
+            pos(xPos + 12, yPos + 121),
+            color(0, 0, 0),
+          ]);
+        } else {
+          const button = add([
+            rect(70, 20),
+            pos(xPos, yPos + 115),
+            "button",
+            {
+              clickAction: () => {
+                if (!clicked) {
+                  buyItem(item);
+                  clicked = true;                  
+                }                               
+              },
+            },
+          ]);
+          
+          add([
+            text("Buy"),
+            pos(xPos + 22, yPos + 121),
+            color(0, 0, 0),
+          ]);
+        }
+      })
+      .catch(error => {
+        console.error(error); // แสดงข้อผิดพลาดในการตรวจสอบ
+      });
+  
+      col++;
+      if (col >= itemsPerRow) {
+        col = 0;
+        row++;
+      }
+    });
+  
+    // ปุ่มกลับไปที่เมนู
+    add([
+      rect(140, 20),
+      pos(50, 5), // ปรับตำแหน่งปุ่มกลับไปที่เมนู
+      "button",
+      {
+        clickAction: () => {
+          go("menu");
+        },
+      },
+    ]);
+  
+    add([
+      text("Back to menu"),
+      pos(72, 11), // ปรับตำแหน่งข้อความปุ่มกลับไปที่เมนู
+      color(0, 0, 0),
+    ]);
+  
+    action("button", (b) => {
       if (b.isHovered()) {
-          b.use(color(0.7, 0.7, 0.7));
+        b.use(color(0.7, 0.7, 0.7));
       } else {
-          b.use(color(1, 1, 1));
+        b.use(color(1, 1, 1));
       }
   
       if (b.isClicked()) {
-          b.clickAction();
+        b.clickAction();
       }
-  }); 
-   
-});
+    });
+  }
+
+  function checkItemInUserCollection(itemSkins) {
+    // ตรวจสอบว่า itemSkins อยู่ใน collection ของผู้ใช้หรือไม่
+    return new Promise((resolve, reject) => {
+      getUserId().then(userId => {
+      database.listDocuments(databaseId, '6562165e1490741e8632', [
+        Query.equal("userId", userId),
+        Query.equal("skins", itemSkins)
+      ])
+      .then(response => {
+        const userItems = response.documents;
+        const isItemInCollection = userItems.length > 0;
+        resolve(isItemInCollection);
+        console.log(resolve(isItemInCollection))
+      })
+      .catch(error => {
+        reject(error);
+      });
+    });
+  });
+  }
+  
+  
+  
+
+function displaycolItems(items) {  
+    const itemsPerRow = 3; // จำนวนสินค้าต่อแถว
+    const offsetX = 150; // ระยะห่างแนวนอน
+    const offsetY = 200; // ระยะห่างแนวตั้ง
+    const startX = 50; // ตำแหน่ง x ของสินค้าแถวแรก
+    const startY = 50; // ตำแหน่ง y ของสินค้าแถวแรก
+    let row = 0;
+    let col = 0;
+  
+    items.forEach((item, index) => {
+      const xPos = startX + col * offsetX;
+      const yPos = startY + row * offsetY;
+  
+      add([      
+        sprite(item.skins),
+        pos(xPos, yPos),
+        scale(2.5), // ลดขนาดลงเล็กน้อย
+      ]);
+  
+      add([
+        text(item.skins),
+        pos(xPos, yPos + 80), // ย้ายข้อความขึ้นมาบนลูกศร
+        color(1, 1, 1),
+      ]);  
+      
+      let clicked = false;
+      add([
+        rect(70, 20),
+        pos(xPos, yPos + 105), // ปรับตำแหน่งปุ่มซื้อสินค้า
+        "button",
+        {
+          clickAction: () => {                
+                         
+          },
+        },
+      ]);
+  
+      add([
+        text("Eqip"),
+        pos(xPos + 20, yPos + 111), // ปรับตำแหน่งข้อความปุ่มซื้อสินค้า
+        color(0, 0, 0),
+      ]);
+  
+      col++;
+      if (col >= itemsPerRow) {
+        col = 0;
+        row++;
+      }
+    });
+  
+    // ปุ่มกลับไปที่เมนู
+    add([
+      rect(140, 20),
+      pos(50, 5), // ปรับตำแหน่งปุ่มกลับไปที่เมนู
+      "button",
+      {
+        clickAction: () => {
+          go("menu");
+        },
+      },
+    ]);
+  
+    add([
+      text("Back to menu"),
+      pos(72, 11), // ปรับตำแหน่งข้อความปุ่มกลับไปที่เมนู
+      color(0, 0, 0),
+    ]);
+  
+    action("button", (b) => {
+      if (b.isHovered()) {
+        b.use(color(0.7, 0.7, 0.7));
+      } else {
+        b.use(color(1, 1, 1));
+      }
+  
+      if (b.isClicked()) {
+        b.clickAction();
+      }
+    });
 
 }
 
@@ -556,7 +567,7 @@ function displaycolItems(items) {
       }
        //สร้างตัวละคร
       const player = add([
-        sprite('test'), solid(),
+        sprite('Megaman'), solid(),
         pos(30, 0),
         body(),//ทำให้มันมีbody เพื่อให้มันหล่นตามแรงโน้มถ่วงได้
         big(),
