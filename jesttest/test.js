@@ -1,56 +1,76 @@
-// test.js
-
-// Mock the startgame function to test scoring when collecting coins
-jest.mock('../game', () => {
-  let scoreLabel = { value: 0 }; // Mock scoreLabel
-
-  return {
-    startgame: jest.fn(() => {
-      // Simulate the collision with a coin to increase the score
-      scoreLabel.value += 1;      
-      return { scoreLabel }; // Return the mock scoreLabel
-    }),
-  };
-});
-
-// Mock the player and its functions
-const mockPlayer = {
-  collides: jest.fn((objType, callback) => {
-    if (objType === 'mushroom') {
-      callback({}); // Simulate colliding with a mushroom
-    }
+// Mock the global functions and databaseId
+getUserId = jest.fn().mockResolvedValue('mockUserId');
+ID = { unique: jest.fn() };
+database = {
+  listDocuments: jest.fn().mockResolvedValue({
+    documents: [{ coin: 100 }] // Mocking a user with 100 coins
   }),
-  biggify: jest.fn((param) => { // Change this line to accept an argument
-    // Implement biggify logic here
-  }),
+  createDocument: jest.fn().mockResolvedValue(),
+  updateDocument: jest.fn().mockResolvedValue()
 };
+alert = jest.fn();
+go = jest.fn();
+showCoin = jest.fn();
+Query = {
+  equal: jest.fn((field, value) => ({ field, value }))
+  // Add other methods used by Query in your function, and mock their behavior
+};
+console.error = jest.fn(); // Mocking console.error
 
-describe('Startgame Function', () => {
-  test('startgame function exists', () => {
-    const game = require('../game'); // Import the mocked startgame function
-    expect(game.startgame).toBeDefined();
+
+// Import the function to be tested
+require('../game');
+
+describe('buyItem function', () => {
+  beforeEach(() => {
+    // Clear mock calls and reset mock behaviors before each test
+    jest.clearAllMocks();
   });
 
-  test('collecting coin increases the score', () => {
-    const game = require('../game'); // Import the mocked startgame function
-    const { scoreLabel } = game.startgame(); // Invoke the mocked startgame function
+  it('should buy an item successfully', async () => {
+    // Mock the necessary return values for successful item purchase
+    const price = 10;
+    const userId = 'user123';
+    const coincurrent = 20;
 
-    // Simulate collecting a coin
-    scoreLabel.value++;
+    // Mock the behavior of functions used within buyItem
+    checkcointobuy= jest.fn().mockResolvedValue(coincurrent); // Updated mock function name
+    getUserId.mockResolvedValue(userId);
+    ID.unique.mockReturnValue('newDocumentId');
 
-    // Check that the score has increased
-    expect(scoreLabel.value).toBe(2);
+    // Simulate the database operations to be successful
+    database.createDocument.mockResolvedValue();
+    database.updateDocument.mockResolvedValue();
+
+    // Call buyItem function
+    await buyItem('ItemName', price);
+
+    // Check if functions were called with the correct parameters
+    expect(checkcointobuy).toHaveBeenCalledWith(price); // Updated mock function name
+    expect(getUserId).toHaveBeenCalled();
+    expect(ID.unique).toHaveBeenCalled();
+    expect(database.createDocument).toHaveBeenCalledWith(
+      '6555bf6a5887f8344b6c',
+      '6562165e1490741e8632',
+      'newDocumentId',
+      {
+        userId: userId,
+        skins: 'ItemName'
+      }
+    );
+    expect(database.updateDocument).toHaveBeenCalledWith(
+      '6555bf6a5887f8344b6c',
+      '6555bf92364ff69f80d2',
+      userId,
+      {
+        userId: userId,
+        coin: coincurrent
+      }
+    );
+    expect(alert).toHaveBeenCalledWith('Buy successfully!');
+    expect(go).toHaveBeenCalledWith('shop');
+    expect(showCoin).toHaveBeenCalled();
   });
-});
 
-describe('Player Mushroom Collision', () => {
-  test('colliding with a mushroom triggers biggify', () => {
-    const gameModule = require('../game');
-
-    gameModule.startgame();
-    mockPlayer.collides('mushroom', () => mockPlayer.biggify(6)); // Update this line
-
-    expect(mockPlayer.collides).toHaveBeenCalledWith('mushroom', expect.any(Function));
-    expect(mockPlayer.biggify).toHaveBeenCalledWith(6); // Update this line
-  });
+  // Add more test cases for error scenarios, edge cases, etc.
 });

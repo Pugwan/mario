@@ -68,6 +68,7 @@ function checkCoin(score){
         });
       });
     }
+    
 
 
 
