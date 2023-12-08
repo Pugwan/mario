@@ -56,8 +56,8 @@ function startgame(){
 
     loadSprite('Megaman','egbzcIw.png')
     loadSprite('Lukaku','G1FcgQW.png')
-    //custom
-    let custom = 'mario';
+  
+    let costume = 'mario';
     
 
     
@@ -353,7 +353,7 @@ function startgame(){
     });
   });
   }   
-  
+
 function displaycolItems(items) {  
     const itemsPerRow = 3; // จำนวนสินค้าต่อแถว
     const offsetX = 150; // ระยะห่างแนวนอน
@@ -379,8 +379,8 @@ function displaycolItems(items) {
           color(1, 1, 1),
       ]);
 
-      let buttonText = item.skins === custom ? 'Equipped' : 'Equip'; // ตรวจสอบ item.skins ว่าตรงกับ custom หรือไม่
-      let isDisabled = item.skins === custom; // กำหนดค่าเพื่อให้ปุ่ม disable หรือ enable ตามเงื่อนไข
+      let buttonText = item.skins === costume ? 'Equipped' : 'Equip'; // ตรวจสอบ item.skins ว่าตรงกับ costume หรือไม่
+      let isDisabled = item.skins === costume; // กำหนดค่าเพื่อให้ปุ่ม disable หรือ enable ตามเงื่อนไข
 
       add([
           rect(70, 20),
@@ -388,8 +388,8 @@ function displaycolItems(items) {
           "button",
           {
               clickAction: () => {
-                  if (!isDisabled) {
-                      custom = item.skins; // เมื่อคลิกปุ่ม "Equip" ให้กำหนดค่า custom เป็น item.skins ที่เลือก
+                  if (!isDisabled) {                      
+                      changeskin(item.skins);// เมื่อคลิกปุ่ม "Equip" ให้กำหนดค่า costume เป็น item.skins ที่เลือก
                   }
                   go("collection")
               },
@@ -615,7 +615,7 @@ function displaycolItems(items) {
       }
        //สร้างตัวละคร
       const player = add([
-        sprite(custom), solid(),
+        sprite(costume), solid(),
         pos(30, 0),
         body(),//ทำให้มันมีbody เพื่อให้มันหล่นตามแรงโน้มถ่วงได้
         big(),
@@ -837,7 +837,7 @@ function buyItem(name,price) {
   console.log(price);   
   checkcointobuy(price)  
     .then(coincurrent => {
-      if (typeof coincurrent === 'number') { // เพิ่มเงื่อนไขตรวจสอบว่า coincurrent เป็นตัวเลขหรือไม่
+      if (typeof coincurrent === 'number') {
         getUserId().then(userId => {
           const newDocumentId = ID.unique();
           database.createDocument(
@@ -875,8 +875,12 @@ function buyItem(name,price) {
       console.error(error);
     });
 }
-
-
+function changeskin(skin){
+  costume = skin;
+}
+if (typeof global !== 'undefined') {
+  global.changeskin = changeskin;  
+}
 
 if (typeof global !== 'undefined') {
   global.checkcointobuy = checkcointobuy;  
