@@ -138,76 +138,6 @@ function startgame(){
     });
     start("menu");
 
-    // function checkcointobuy(item) {
-    //   return getUserId()
-    //     .then(userId => {
-    //       return database
-    //         .listDocuments(databaseId, '6555bf92364ff69f80d2', [
-    //           Query.equal("userId", userId)
-    //         ])
-    //         .then(response => {
-    //           const userItems = response.documents;
-    //           const skinprice = item.price;
-    //           const totalcoin = userItems[0].coin;
-    //           if (totalcoin < skinprice) {
-    //             return 'Not enough coin';
-    //           } else {
-    //             const sum = totalcoin - skinprice;
-    //             return sum;
-    //           }
-    //         })
-    //         .catch(error => {
-    //           console.error(error);
-    //           throw error; // Re-throw the error to propagate it
-    //         });
-    //     })
-    //     .catch(error => {
-    //       console.error(error);
-    //       throw error; // Re-throw the error to propagate it
-    //     });
-    // } 
-
-    // function buyItem(item) {
-    //   checkcointobuy(item)
-    //     .then(coincurrent => {
-    //       if (typeof coincurrent === 'number') { // เพิ่มเงื่อนไขตรวจสอบว่า coincurrent เป็นตัวเลขหรือไม่
-    //         getUserId().then(userId => {
-    //           const newDocumentId = ID.unique();
-    //           database.createDocument(
-    //             databaseId,
-    //             '6562165e1490741e8632',
-    //             newDocumentId,
-    //             {
-    //               "userId": userId,
-    //               "skins": item.name
-    //             }
-    //           );
-    //           database.updateDocument(
-    //             databaseId,
-    //             '6555bf92364ff69f80d2',
-    //             userId,
-    //             {
-    //               "userId": userId,
-    //               "coin": coincurrent
-    //             }
-    //           ).then(() => {
-    //             alert('Buy successfully!');
-    //             go("shop");
-    //             showCoin();
-    //           }).catch(error => {
-    //             go("shop");
-    //             showCoin();
-    //             console.error(error);
-    //           });
-    //         });
-    //       } else {            
-    //         alert(coincurrent+'!');
-    //       }
-    //     })
-    //     .catch(error => {
-    //       console.error(error);
-    //     });
-    // }
 
   scene("shop", () => {     
     const collectionIdskin = '6561fec3d1f900b246e5';
@@ -256,7 +186,7 @@ function startgame(){
       .then(isItemInCollection => {
         if (isItemInCollection) {
           const button = add([
-            rect(70, 20),
+            rect(85, 20),
             pos(xPos, yPos + 115),
             "button",
             {
@@ -266,13 +196,13 @@ function startgame(){
             },
           ]);
           add([
-            text("Obtain"),
+            text("Obtained"),
             pos(xPos + 12, yPos + 121),
             color(0, 0, 0),
           ]);
         } else {
           const button = add([
-            rect(70, 20),
+            rect(85, 20),
             pos(xPos, yPos + 115),
             "button",
             {
@@ -352,8 +282,10 @@ function startgame(){
       });
     });
   });
-  }   
-
+  } 
+function changeskin(skin){
+    costume = skin;
+}
 function displaycolItems(items) {  
     const itemsPerRow = 3; // จำนวนสินค้าต่อแถว
     const offsetX = 150; // ระยะห่างแนวนอน
@@ -804,6 +736,7 @@ function displaycolItems(items) {
     // เริ่มเกมด้วยการเข้าสู่ฉาก "game" ด้วยระดับ 0 และคะแนน 0
     // start("game", { level: 0, score: 0})
 }
+
 function checkcointobuy(price) {
   return getUserId()
     .then(userId => {
